@@ -13,8 +13,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 
-import java.util.concurrent.TimeUnit;
-
 public class Message {
     public static PlayerManager manager;
     private MutableText text;
@@ -58,12 +56,6 @@ public class Message {
     }
 
     public Message click(String message) {
-        text.styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, message)));
-        return this;
-    }
-
-    public Message click(String message, int timeout) throws InterruptedException {
-        TimeUnit.SECONDS.sleep(timeout);
         text.styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, message)));
         return this;
     }

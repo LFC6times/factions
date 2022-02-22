@@ -10,17 +10,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Invite;
 import io.icker.factions.database.Member;
-		import net.minecraft.server.command.ServerCommandSource;
-		import net.minecraft.server.network.ServerPlayerEntity;
-		import net.minecraft.util.Formatting;
-		import net.minecraft.util.Util;
-		import net.minecraft.util.UserCache;
-		import net.minecraft.util.Util;
-
-		import java.util.ArrayList;
-		import java.util.stream.Collectors;
 import io.icker.factions.util.Message;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
+import net.minecraft.util.UserCache;
 
 public class InviteCommand {
 	public static int list(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -58,11 +54,7 @@ public class InviteCommand {
 			return 0;
 		}
 
-		for (Member member : faction.getMembers())
-			if (member.uuid.equals(target.getUuid()))
-				new Message(target.getName().getString() + " is already in your faction").format(Formatting.RED).send(player, false);
-
-		Invite.add(target.getUuid(), faction.name);
+		Invite.add(target.getUuid(), faction.name); 
 
 		new Message(target.getName().getString() + " has been invited")
 			.send(faction);

@@ -1,6 +1,5 @@
 package io.icker.factions.command;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -37,7 +36,7 @@ public class CommandRegistry {
 
 		LiteralCommandNode<ServerCommandSource> disband = CommandManager
 			.literal("disband")
-			.requires(CommandRegistry::isOwner)
+			.requires(CommandRegistry::isFactionMember)
 			.executes(new DisbandCommand())
 			.build();
 
@@ -52,9 +51,8 @@ public class CommandRegistry {
 
 		LiteralCommandNode<ServerCommandSource> leave = CommandManager
 			.literal("leave")
-			.requires(s -> CommandRegistry.isFactionMember(s) && !CommandRegistry.isOwner(s))
+			.requires(CommandRegistry::isFactionMember)
 			.executes(new LeaveCommand())
-				.executes(AutoClaimCommand::stopAutoClaim)
 			.build();
 
 		LiteralCommandNode<ServerCommandSource> info = CommandManager
@@ -89,7 +87,7 @@ public class CommandRegistry {
 
 		LiteralCommandNode<ServerCommandSource> modify = CommandManager
 			.literal("modify")
-			.requires(CommandRegistry::isRankAboveOfficer)
+			.requires(CommandRegistry::isFactionMember)
 			.build();
 
 		LiteralCommandNode<ServerCommandSource> description = CommandManager
@@ -118,7 +116,7 @@ public class CommandRegistry {
 
 		LiteralCommandNode<ServerCommandSource> invite = CommandManager
 			.literal("invite")
-			.requires(CommandRegistry::isRankAboveCivilian)
+			.requires(CommandRegistry::isFactionMember)
 			.build();
 
 		LiteralCommandNode<ServerCommandSource> listInvites = CommandManager
@@ -139,27 +137,6 @@ public class CommandRegistry {
 			.then(
 				CommandManager.argument("player", EntityArgumentType.player())
 				.executes(InviteCommand::remove)
-			)
-			.build();
-
-		LiteralCommandNode<ServerCommandSource> ally = CommandManager
-			.literal("ally")
-			.requires(CommandRegistry::isRankAboveCivilian)
-			.build();
-
-		LiteralCommandNode<ServerCommandSource> addAlly = CommandManager
-			.literal("add")
-			.then(
-					CommandManager.argument("player", EntityArgumentType.player())
-							.executes(AllyCommand::add)
-			)
-			.build();
-
-		LiteralCommandNode<ServerCommandSource> removeAlly = CommandManager
-			.literal("remove")
-			.then(
-				CommandManager.argument("player", EntityArgumentType.player())
-					.executes(AllyCommand::remove)
 			)
 			.build();
 
@@ -192,13 +169,7 @@ public class CommandRegistry {
 		
 		LiteralCommandNode<ServerCommandSource> setHome = CommandManager
 			.literal("set")
-			.requires(CommandRegistry::isRankAboveOfficer)
 			.executes(HomeCommand::set)
-			.build();
-
-		LiteralCommandNode<ServerCommandSource> map = CommandManager
-			.literal("map")
-			.executes(MapCommand::show)
 			.build();
 		
 		LiteralCommandNode<ServerCommandSource> adminBypass = CommandManager
@@ -206,79 +177,6 @@ public class CommandRegistry {
 			.requires(s -> s.hasPermissionLevel(Config.REQUIRED_BYPASS_LEVEL))
 			.executes(new BypassCommand())
 			.build();
-
-		LiteralCommandNode<ServerCommandSource> rank = CommandManager
-			.literal("rank")
-			.requires(CommandRegistry::isRankAboveOfficer)
-			.build();
-
-		LiteralCommandNode<ServerCommandSource> promote = CommandManager
-			.literal("promote")
-			.then(CommandManager.argument("player", EntityArgumentType.player())
-				.executes(RankCommand::promote))
-			.build();
-
-		LiteralCommandNode<ServerCommandSource> demote = CommandManager
-				.literal("demote")
-				.then(CommandManager.argument("player", EntityArgumentType.player())
-						.executes(RankCommand::demote))
-				.build();
-
-		LiteralCommandNode<ServerCommandSource> transferOwner = CommandManager
-				.literal("transferOwner")
-				.requires(CommandRegistry::isOwner)
-				.then(CommandManager.argument("player", EntityArgumentType.player())
-						.executes(c -> new TransferOwnerCommand().run(c)))
-				.build();
-
-		LiteralCommandNode<ServerCommandSource> kickMember = CommandManager
-				.literal("kickMember")
-				.requires(CommandRegistry::isRankAboveOfficer)
-				.then(CommandManager.argument("player", EntityArgumentType.player())
-						.executes(c -> new KickMemberCommand().run(c)))
-				.build();
-
-		LiteralCommandNode<ServerCommandSource> enemy = CommandManager
-				.literal("enemy")
-				.requires(CommandRegistry::isRankAboveCivilian)
-				.build();
-
-		LiteralCommandNode<ServerCommandSource> addEnemy = CommandManager
-				.literal("add")
-				.then(
-						CommandManager.argument("player", EntityArgumentType.player())
-								.executes(EnemyCommand::add)
-				)
-				.build();
-
-		LiteralCommandNode<ServerCommandSource> removeEnemy = CommandManager
-				.literal("remove")
-				.then(
-						CommandManager.argument("player", EntityArgumentType.player())
-								.executes(EnemyCommand::remove)
-				)
-				.build();
-		/*
-		LiteralCommandNode<ServerCommandSource> forceChangeAllyToEnemy = CommandManager
-				.literal("force")
-						.then(
-								CommandManager.argument("player", EntityArgumentType.player())
-										.executes(EnemyCommand::forceRemove)
-						)
-				.build();
-		*/
-		LiteralCommandNode<ServerCommandSource> autoClaim = CommandManager
-				.literal("autoclaim")
-				.requires(CommandRegistry::isFactionMember)
-				.build();
-		LiteralCommandNode<ServerCommandSource> autoClaimStart = CommandManager
-				.literal("start")
-				.executes(AutoClaimCommand::startAutoClaim)
-				.build();
-		LiteralCommandNode<ServerCommandSource> autoClaimStop = CommandManager
-				.literal("stop")
-				.executes(AutoClaimCommand::stopAutoClaim)
-				.build();
 
 		dispatcher.getRoot().addChild(factions);
 		dispatcher.getRoot().addChild(alias);
@@ -292,15 +190,6 @@ public class CommandRegistry {
 		factions.addChild(adminBypass);
 		factions.addChild(chat);
 
-		factions.addChild(enemy);
-		enemy.addChild(removeEnemy);
-		enemy.addChild(addEnemy);
-		//addEnemy.addChild(forceChangeAllyToEnemy);
-
-		factions.addChild(autoClaim);
-		autoClaim.addChild(autoClaimStart);
-		autoClaim.addChild(autoClaimStop);
-
 		factions.addChild(modify);
 		modify.addChild(description);
 		modify.addChild(color);
@@ -311,24 +200,12 @@ public class CommandRegistry {
 		invite.addChild(addInvite);
 		invite.addChild(removeInvite);
 
-		factions.addChild(ally);
-		ally.addChild(addAlly);
-		ally.addChild(removeAlly);
-
 		factions.addChild(claim);
 		claim.addChild(listClaim);
 		claim.addChild(removeClaim);
 		removeClaim.addChild(removeAllClaims);
 
 		factions.addChild(home);
-
-		factions.addChild(rank);
-		rank.addChild(promote);
-		rank.addChild(demote);
-		factions.addChild(transferOwner);
-		factions.addChild(kickMember);
-		factions.addChild(map);
-
 		home.addChild(setHome);
 	}
 
@@ -342,41 +219,4 @@ public class CommandRegistry {
 	public static boolean isFactionless(ServerCommandSource source) {
 		return !isFactionMember(source);
 	}
-
-	public static boolean isCivilian(ServerCommandSource source) {
-		try {
-			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.CIVILIAN;
-		} catch (CommandSyntaxException e) { return false; }
-	}
-
-	public static boolean isOfficer(ServerCommandSource source) {
-		try {
-			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.OFFICER;
-		} catch (CommandSyntaxException e) { return false; }
-	}
-
-	public static boolean isCoOwner(ServerCommandSource source) {
-		try {
-			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.CO_OWNER;
-		} catch (CommandSyntaxException e) { return false; }
-	}
-
-	public static boolean isOwner(ServerCommandSource source) {
-		try {
-			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.OWNER;
-		} catch (CommandSyntaxException e) { return false; }
-	}
-
-	public static boolean isRankAboveOfficer(ServerCommandSource source) {
-		return isOwner(source) || isCoOwner(source);
-	}
-
-	public static boolean isRankAboveCivilian(ServerCommandSource source) {
-		return isOwner(source) || isCoOwner(source) || isOfficer(source);
-	}
-
 }
