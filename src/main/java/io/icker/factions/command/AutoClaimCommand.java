@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.icker.factions.database.Claim;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Member;
+import io.icker.factions.util.Dynmap;
 import io.icker.factions.util.Message;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -47,6 +48,7 @@ public class AutoClaimCommand {
             Faction faction = member.getFaction();
             faction.addClaim(chunkPos.x, chunkPos.z, dimension);
             new Message("%s claimed chunk (%d, %d)", player.getName().asString(), chunkPos.x, chunkPos.z).send(faction);
+            Dynmap.newChunkClaim(chunkPos, faction);
         } else {
             String owner = existingClaim.getFaction().name == member.getFaction().name ? "Your" : "Another";
             new Message(owner + " faction already owns this chunk").fail().send(player, false);

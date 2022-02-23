@@ -1,5 +1,6 @@
 package io.icker.factions.event;
 
+import io.icker.factions.FactionsMod;
 import io.icker.factions.database.Database;
 import io.icker.factions.util.Message;
 import net.minecraft.server.MinecraftServer;
