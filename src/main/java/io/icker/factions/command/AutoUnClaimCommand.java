@@ -14,7 +14,7 @@ import net.minecraft.util.math.ChunkPos;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoClaimCommand {
+public class AutoUnClaimCommand {
     public static Map<ServerPlayerEntity, ChunkPos> playerToChunk = new HashMap<ServerPlayerEntity, ChunkPos>();
 
     public static void addPlayer(ServerPlayerEntity player) {
@@ -27,39 +27,40 @@ public class AutoClaimCommand {
         // playerToFaction.remove(player);
     }
 
-    public static void autoClaimLoop() {
+    public static void autoUnClaimLoop() {
         for(Map.Entry<ServerPlayerEntity, ChunkPos> temp : playerToChunk.entrySet()) {
             ChunkPos chunkPos = temp.getKey().getServerWorld().getChunk(temp.getKey().getBlockPos()).getPos();
             if (chunkPos != temp.getValue()) {
-                claim(temp.getKey());
+                unClaim(temp.getKey());
                 playerToChunk.replace(temp.getKey(), chunkPos);
             }
         }
     }
 
-    public static void claim(ServerPlayerEntity player) {
+    public static void unClaim(ServerPlayerEntity player) {
         Member member = Member.get(player.getUuid());
         ChunkPos chunkPos = player.getServerWorld().getChunk(player.getBlockPos()).getPos();
         String dimension = player.getServerWorld().getRegistryKey().getValue().toString();
 
         Claim existingClaim = Claim.get(chunkPos.x, chunkPos.z, dimension);
         if (existingClaim == null) {
-            Faction faction = member.getFaction();
-            faction.addClaim(chunkPos.x, chunkPos.z, dimension);
-            new Message("%s claimed chunk (%d, %d)", player.getName().asString(), chunkPos.x, chunkPos.z).send(faction);
-            Dynmap.newChunkClaim(chunkPos, faction);
+            new Message("You cannot unclaim a chunk you do not own.").fail().send(player, false);
+        } else if(existingClaim.getFaction().name != member.getFaction().name) {
+            new Message("Another faction owns this chunk").fail().send(player, false);
         } else {
-            String owner = existingClaim.getFaction().name == member.getFaction().name ? "Your" : "Another";
-            new Message(owner + " faction already owns this chunk").fail().send(player, false);
+            existingClaim.remove();
+            Faction faction = member.getFaction();
+            new Message("%s removed claim at chunk (%d, %d)", player.getName().asString(), existingClaim.x, existingClaim.z).send(faction);
+            Dynmap.removeChunkClaim(chunkPos, faction);
         }
     }
 
-    public static int startAutoClaim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int startAutoUnClaim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         addPlayer(context.getSource().getPlayer());
         return 0;
     }
 
-    public static int stopAutoClaim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int stopAutoUnClaim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         removePlayer(context.getSource().getPlayer());
         return 1;
     }

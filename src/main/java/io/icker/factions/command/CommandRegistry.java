@@ -176,6 +176,7 @@ public class CommandRegistry {
 		
 		LiteralCommandNode<ServerCommandSource> removeClaim = CommandManager
 			.literal("remove")
+			.requires(CommandRegistry::isRankAboveCivilian)
 			.executes(ClaimCommand::remove)
 			.build();
 
@@ -183,6 +184,16 @@ public class CommandRegistry {
 			.literal("all")
 			.executes(ClaimCommand::removeAll)
 			.build();
+
+		LiteralCommandNode<ServerCommandSource> removeClaim2 = CommandManager
+				.literal("removeclaim")
+				.requires(CommandRegistry::isRankAboveCivilian)
+				.executes(ClaimCommand::remove)
+				.build();
+		LiteralCommandNode<ServerCommandSource> removeAllClaims2 = CommandManager
+				.literal("all")
+				.executes(ClaimCommand::removeAll)
+				.build();
 
 		LiteralCommandNode<ServerCommandSource> home = CommandManager
 			.literal("home")
@@ -280,6 +291,22 @@ public class CommandRegistry {
 				.executes(AutoClaimCommand::stopAutoClaim)
 				.build();
 
+		LiteralCommandNode<ServerCommandSource> autoUnClaim = CommandManager
+				.literal("autounclaim")
+				.requires(CommandRegistry::isFactionMember)
+				.requires(CommandRegistry::isRankAboveCivilian)
+				.build();
+		LiteralCommandNode<ServerCommandSource> autoUnClaimStart = CommandManager
+				.literal("start")
+				.executes(AutoUnClaimCommand::startAutoUnClaim)
+				.build();
+		LiteralCommandNode<ServerCommandSource> autoUnClaimStop = CommandManager
+				.literal("stop")
+				.executes(AutoUnClaimCommand::stopAutoUnClaim)
+				.build();
+
+
+
 		dispatcher.getRoot().addChild(factions);
 		dispatcher.getRoot().addChild(alias);
 
@@ -292,6 +319,9 @@ public class CommandRegistry {
 		factions.addChild(adminBypass);
 		factions.addChild(chat);
 
+		factions.addChild(removeClaim2);
+		removeClaim2.addChild(removeAllClaims2);
+
 		factions.addChild(enemy);
 		enemy.addChild(removeEnemy);
 		enemy.addChild(addEnemy);
@@ -300,6 +330,10 @@ public class CommandRegistry {
 		factions.addChild(autoClaim);
 		autoClaim.addChild(autoClaimStart);
 		autoClaim.addChild(autoClaimStop);
+
+		factions.addChild(autoUnClaim);
+		autoUnClaim.addChild(autoUnClaimStart);
+		autoUnClaim.addChild(autoUnClaimStop);
 
 		factions.addChild(modify);
 		modify.addChild(description);

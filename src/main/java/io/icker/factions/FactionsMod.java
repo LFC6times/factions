@@ -1,5 +1,6 @@
 package io.icker.factions;
 
+import io.icker.factions.command.AutoUnClaimCommand;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +39,7 @@ public class FactionsMod implements ModInitializer {
 
 		ServerTickEvents.START_SERVER_TICK.register((startTick) -> {
 			AutoClaimCommand.autoClaimLoop();
+			AutoUnClaimCommand.autoUnClaimLoop();
 		});
 
 	}

@@ -92,6 +92,7 @@ public class ClaimCommand {
 
 		existingClaim.remove();
 		new Message("%s removed claim at chunk (%d, %d)", player.getName().asString(), existingClaim.x, existingClaim.z).send(faction);
+		Dynmap.removeChunkClaim(chunkPos, faction);
 		return 1;
 	}
 
@@ -100,6 +101,13 @@ public class ClaimCommand {
 		ServerPlayerEntity player = source.getPlayer();
 
 		Faction faction = Member.get(player.getUuid()).getFaction();
+
+		ArrayList<Claim> claimList = faction.getClaims();
+
+		for(Claim claim : claimList) {
+			Dynmap.removeChunkClaim(claim.x * 16, claim.z * 16, claim.x * 16 + (claim.x < 0 ? -16 : 16), claim.z * 16 + (claim.z < 0 ? -16 : 16), faction);
+		}
+
 
 		faction.removeAllClaims();
 		new Message("%s removed all claims", player.getName().asString()).send(faction);
