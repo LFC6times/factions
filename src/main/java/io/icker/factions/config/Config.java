@@ -1,16 +1,15 @@
 package io.icker.factions.config;
 
-import java.util.ArrayList;
-
 import com.google.gson.JsonObject;
-
 import io.icker.factions.config.Zone.Type;
 
+import java.util.ArrayList;
+
 public class Config {
-    public static enum HomeOptions {
+    public enum HomeOptions {
         ANYWHERE,
         CLAIMS,
-        DISABLED;
+        DISABLED
     }
 
     public static ArrayList<Zone> ZONES = new ArrayList<Zone>();
@@ -60,5 +59,5 @@ public class Config {
 
     public static Zone getZone(String dimension, int x, int z) {
         return ZONES.stream().filter(zone -> zone.isApplicable(dimension, x, z)).findFirst().orElse(new Zone(Type.DEFAULT, "No Zones Set"));
-    };
+    }
 }

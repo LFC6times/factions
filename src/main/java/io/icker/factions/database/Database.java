@@ -7,9 +7,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 */
-import java.sql.*;
 
 import io.icker.factions.FactionsMod;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Database {
     public static Connection con;

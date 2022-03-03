@@ -1,9 +1,9 @@
 package io.icker.factions.database;
 
+import net.minecraft.util.Formatting;
+
 import java.util.ArrayList;
 import java.util.UUID;
-
-import net.minecraft.util.Formatting;
 
 public class Faction {
     public String name;

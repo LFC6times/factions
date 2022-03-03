@@ -1,20 +1,18 @@
 package io.icker.factions.mixin;
 
+import io.icker.factions.config.Config;
+import io.icker.factions.event.FactionEvents;
+import io.icker.factions.event.PlayerInteractEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import io.icker.factions.config.Config;
-import io.icker.factions.event.FactionEvents;
-import io.icker.factions.event.PlayerInteractEvents;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends LivingEntity {
@@ -27,6 +25,15 @@ public abstract class ServerPlayerEntityMixin extends LivingEntity {
     public void onDeath(DamageSource source, CallbackInfo info) {
         Entity entity = source.getSource();
         if (entity == null || !entity.isPlayer()) return;
+        Entity attacker = source.getAttacker();
+        if(attacker == null) {}
+        else if (attacker.isPlayer()) {
+            if(attacker.getName().asString().equals(entity.getName().asString())) {}
+            else {
+                FactionEvents.killedAPlayer((ServerPlayerEntity) attacker, (ServerPlayerEntity) entity);
+            }
+        }
+
         FactionEvents.playerDeath((ServerPlayerEntity) (Object) this);
     }
 

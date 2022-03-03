@@ -4,8 +4,8 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import io.icker.factions.database.Member;
+import io.icker.factions.util.Dynmap;
 import io.icker.factions.util.Message;
 import net.minecraft.command.argument.ColorArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -21,6 +21,7 @@ public class ModifyCommand {
 
 		Member.get(player.getUuid()).getFaction().setDescription(description);
 		new Message("Successfully updated faction description").send(player, false);
+		Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
 		return 1;
     }
 
@@ -32,6 +33,7 @@ public class ModifyCommand {
 
 		Member.get(player.getUuid()).getFaction().setColor(color);
 		new Message("Successfully updated faction color").send(player, false);
+		Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
 		return 1;
     }
 

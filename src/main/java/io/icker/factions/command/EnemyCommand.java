@@ -1,16 +1,14 @@
 package io.icker.factions.command;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.icker.factions.database.Ally;
+import io.icker.factions.database.Enemy;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Member;
-import io.icker.factions.database.Enemy;
-import io.icker.factions.database.Ally;
+import io.icker.factions.util.Dynmap;
 import io.icker.factions.util.Message;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
@@ -42,6 +40,7 @@ public class EnemyCommand {
                     sourceFaction.name + " has made you their enemy. Click to make them your enemy.").format(Formatting.YELLOW)
                     .click("/factions enemy add " + source.getName())
                     .send(target, false);
+            Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
         }
 
         return 1;
@@ -67,6 +66,7 @@ public class EnemyCommand {
                     "You are no longer enemies with " + sourceFaction.name + ". Click to remove them as an enemy.").format(Formatting.YELLOW)
                     .click("/factions enemy remove " + sourceFaction.name)
                     .send(target, false);
+            Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
         }
 
         return 1;

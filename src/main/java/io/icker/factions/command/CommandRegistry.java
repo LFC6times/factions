@@ -1,12 +1,10 @@
 package io.icker.factions.command;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-
 import io.icker.factions.config.Config;
 import io.icker.factions.database.Member;
 import net.minecraft.command.argument.ColorArgumentType;
@@ -39,6 +37,8 @@ public class CommandRegistry {
 			.literal("disband")
 			.requires(CommandRegistry::isOwner)
 			.executes(new DisbandCommand())
+				.executes(AutoClaimCommand::stopAutoClaim)
+				.executes(AutoUnClaimCommand::stopAutoUnClaim)
 			.build();
 
 		LiteralCommandNode<ServerCommandSource> join = CommandManager
@@ -55,6 +55,7 @@ public class CommandRegistry {
 			.requires(s -> CommandRegistry.isFactionMember(s) && !CommandRegistry.isOwner(s))
 			.executes(new LeaveCommand())
 				.executes(AutoClaimCommand::stopAutoClaim)
+				.executes(AutoUnClaimCommand::stopAutoUnClaim)
 			.build();
 
 		LiteralCommandNode<ServerCommandSource> info = CommandManager

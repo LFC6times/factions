@@ -5,7 +5,7 @@ import java.util.UUID;
 public class Member {
     public final UUID uuid;
     private final String factionName;
-    private Rank rank;
+    private final Rank rank;
 
     public static Member get(UUID uuid) {
         Query query = new Query("SELECT faction, rank FROM Member WHERE uuid = ?;")
@@ -62,6 +62,6 @@ public class Member {
         OWNER,
         CO_OWNER,
         OFFICER,
-        CIVILIAN;
+        CIVILIAN
     }
 }

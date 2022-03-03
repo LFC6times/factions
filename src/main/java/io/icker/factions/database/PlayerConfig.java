@@ -6,7 +6,7 @@ public class PlayerConfig {
     public enum ChatOption {
         FOCUS,
         FACTION,
-        GLOBAL;
+        GLOBAL
     }
 
     public UUID uuid;

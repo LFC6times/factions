@@ -1,11 +1,7 @@
 package io.icker.factions.command;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import io.icker.factions.database.Claim;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Member;
@@ -17,6 +13,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.ChunkPos;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class ClaimCommand {
 	public static int list(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

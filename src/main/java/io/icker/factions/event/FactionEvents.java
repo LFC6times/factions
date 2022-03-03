@@ -17,6 +17,18 @@ public class FactionEvents {
         new Message("%s lost %d power from dying", player.getName().asString(), adjusted).send(faction);
     }
 
+    public static void killedAPlayer(ServerPlayerEntity player, ServerPlayerEntity killed) {
+        Member member = Member.get(player.getUuid());
+        if(member == null) {
+            return;
+        }
+
+        Faction faction = member.getFaction();
+
+        int adjusted = adjustPower(faction, Config.POWER_DEATH_PENALTY + 1);
+        new Message("%s gained %d power from killing " + killed.getName().asString(), player.getName().asString(), adjusted).send(faction);
+    }
+
     public static void powerTick(ServerPlayerEntity player) {
         Member member = Member.get(player.getUuid());
         if (member == null) return;

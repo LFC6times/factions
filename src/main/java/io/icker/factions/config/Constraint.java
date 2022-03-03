@@ -16,26 +16,26 @@ public class Constraint {
     }
 
     public boolean checkEqual(int value) {
-        return equal == null ? true : value == equal;
+        return equal == null || value == equal;
     }
 
     public boolean checkNotEqual(int value) {
-        return notEqual == null ? true : value != notEqual;
+        return notEqual == null || value != notEqual;
     }
 
     public boolean checkLessThan(int value) {
-        return lessThan == null ? true : value < lessThan;
+        return lessThan == null || value < lessThan;
     }
 
     public boolean checkLessThanOrEqual(int value) {
-        return lessThanOrEqual == null ? true : value <= lessThanOrEqual;
+        return lessThanOrEqual == null || value <= lessThanOrEqual;
     }
 
     public boolean checkGreaterThan(int value) {
-        return greaterThan == null ? true : value > greaterThan;
+        return greaterThan == null || value > greaterThan;
     }
 
     public boolean checkGreaterThanOrEqual(int value) {
-        return greaterThanOrEqual == null ? true : value >= greaterThanOrEqual;
+        return greaterThanOrEqual == null || value >= greaterThanOrEqual;
     }
 }

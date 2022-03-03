@@ -2,9 +2,10 @@ package io.icker.factions.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.icker.factions.database.Ally;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Member;
-import io.icker.factions.database.Ally;
+import io.icker.factions.util.Dynmap;
 import io.icker.factions.util.Message;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -34,6 +35,7 @@ public class AllyCommand {
                     "You are now allies with " + sourceFaction.name + ". Click to ally them back.").format(Formatting.YELLOW)
                     .click("/factions ally add " + source.getName())
                     .send(target, false);
+            Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
         }
 
         return 1;
@@ -59,6 +61,7 @@ public class AllyCommand {
                     "You are no longer allies with " + sourceFaction.name + ". Click to remove them as an ally.").format(Formatting.YELLOW)
                     .click("/factions ally remove " + sourceFaction.name)
                     .send(target, false);
+            Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
         }
 
         return 1;

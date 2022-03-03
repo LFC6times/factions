@@ -4,7 +4,7 @@ public class Claim {
     public int x;
     public int z;
     public String level;
-    private String factionName;
+    private final String factionName;
 
     public static Claim get(int x, int z, String level) {
         Query query = new Query("SELECT faction FROM Claim WHERE x = ? AND z = ? AND level = ?;")

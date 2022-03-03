@@ -1,14 +1,14 @@
 package io.icker.factions;
 
+import io.icker.factions.command.AutoClaimCommand;
 import io.icker.factions.command.AutoUnClaimCommand;
+import io.icker.factions.config.Config;
+import io.icker.factions.database.Faction;
+import io.icker.factions.util.Dynmap;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import io.icker.factions.config.Config;
-import net.fabricmc.api.ModInitializer;
-
-import io.icker.factions.command.AutoClaimCommand;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.DynmapCommonAPIListener;
 import org.dynmap.markers.MarkerAPI;
@@ -19,6 +19,8 @@ public class FactionsMod implements ModInitializer {
 	public static DynmapCommonAPI dynmapCommonAPI;
 	public static MarkerAPI markerApi;
 	public static MarkerSet markerSet;
+
+	public static int ticksElapsed = 0;
 
 	@Override
 	public void onInitialize() {
@@ -38,8 +40,18 @@ public class FactionsMod implements ModInitializer {
 		});
 
 		ServerTickEvents.START_SERVER_TICK.register((startTick) -> {
-			AutoClaimCommand.autoClaimLoop();
-			AutoUnClaimCommand.autoUnClaimLoop();
+			if(++ticksElapsed % 10 == 0) {
+				AutoClaimCommand.autoClaimLoop();
+				AutoUnClaimCommand.autoUnClaimLoop();
+			}
+		});
+
+		ServerTickEvents.END_WORLD_TICK.register((endTick) -> {
+			if(!Dynmap.factionsToUpdate.isEmpty()) {
+				Faction faction = Dynmap.factionsToUpdate.get(0);
+				Dynmap.factionsToUpdate.remove(0);
+				Dynmap.modifyFactionInfo(faction);
+			}
 		});
 
 	}

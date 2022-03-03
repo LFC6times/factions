@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Invite {
     public UUID playerId;
-    private String factionName;
+    private final String factionName;
 
     public static Invite get(UUID playerId, String factionName) {
         Query query = new Query("SELECT * FROM Invite WHERE player = ? AND faction = ?;")

@@ -1,17 +1,17 @@
 package io.icker.factions.database;
 
+import io.icker.factions.FactionsMod;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import io.icker.factions.FactionsMod;
 
 // TODO: stmt.close() on gets
 public class Query {
     private PreparedStatement statement;
     private ResultSet result;
 
-    private String query;
+    private final String query;
     private int paramIndex = 1;
     private boolean skippedNext = false;
 
