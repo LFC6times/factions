@@ -1,3 +1,6 @@
+# THIS IS A FORK OF THE [![ORIGINAL](https://github.com/ickerio/factions/)] MOD
+## except I didn't hit the fork button when I started coding omegalol and too lazy to figure out git
+
 <div align="center">
 
 <img alt="Factions Mod Icon" src="src/main/resources/assets/factions/icon.png" width="128">
