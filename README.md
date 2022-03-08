@@ -1,3 +1,6 @@
+# THIS IS A FORK OF THE [![ORIGINAL](https://github.com/ickerio/factions/)] MOD
+## except I didn't hit the fork button when I started coding omegalol and too lazy to figure out git
+To reach out to me (the fork maker) DM on discord @sussybaka#7536
 <div align="center">
 
 <img alt="Factions Mod Icon" src="src/main/resources/assets/factions/icon.png" width="128">
@@ -18,7 +21,7 @@ A faction's power cap increases as new members join, expanding their ability to 
 
 ## Documentation
 
-Factions Mod is very intiuative to use and works out of the box, requiring no additional configuration. However, you can read further about the mod on the [Wiki](https://github.com/ickerio/factions/wiki)
+Factions Mod is very intuitive to use and works out of the box, requiring no additional configuration. However, you can read further about the mod on the [Wiki](https://github.com/ickerio/factions/wiki)
 
 Have an issue or a suggestion? Join [our discord][discord]
 
