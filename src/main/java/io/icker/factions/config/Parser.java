@@ -94,7 +94,7 @@ public class Parser {
     }
 
     public static ArrayList<String> asDimensionList(JsonObject obj, String key) {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
 
         asArray(obj, key).forEach(e -> {
             if (e.isJsonPrimitive()) {

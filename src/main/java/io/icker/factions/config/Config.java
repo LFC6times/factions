@@ -12,7 +12,7 @@ public class Config {
         DISABLED
     }
 
-    public static ArrayList<Zone> ZONES = new ArrayList<Zone>();
+    public static ArrayList<Zone> ZONES = new ArrayList<>();
     public static int BASE_POWER;
     public static int MEMBER_POWER;
     public static int CLAIM_WEIGHT;

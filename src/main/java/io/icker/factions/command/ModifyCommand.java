@@ -12,6 +12,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
 
+import java.util.Objects;
+
 public class ModifyCommand {
     public static int description(CommandContext<ServerCommandSource> context) throws CommandSyntaxException{
         String description = StringArgumentType.getString(context, "description");
@@ -19,9 +21,9 @@ public class ModifyCommand {
 		ServerCommandSource source = context.getSource();
 		ServerPlayerEntity player = source.getPlayer();
 
-		Member.get(player.getUuid()).getFaction().setDescription(description);
+		Objects.requireNonNull(Member.get(player.getUuid())).getFaction().setDescription(description);
 		new Message("Successfully updated faction description").send(player, false);
-		Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
+		Dynmap.addFactionsToUpdate(Objects.requireNonNull(Member.get(player.getUuid())).getFaction());
 		return 1;
     }
 
@@ -31,9 +33,9 @@ public class ModifyCommand {
 		ServerCommandSource source = context.getSource();
 		ServerPlayerEntity player = source.getPlayer();
 
-		Member.get(player.getUuid()).getFaction().setColor(color);
+		Objects.requireNonNull(Member.get(player.getUuid())).getFaction().setColor(color);
 		new Message("Successfully updated faction color").send(player, false);
-		Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
+		Dynmap.addFactionsToUpdate(Objects.requireNonNull(Member.get(player.getUuid())).getFaction());
 		return 1;
     }
 
@@ -43,7 +45,7 @@ public class ModifyCommand {
 		ServerCommandSource source = context.getSource();
 		ServerPlayerEntity player = source.getPlayer();
 
-		Member.get(player.getUuid()).getFaction().setOpen(open);
+		Objects.requireNonNull(Member.get(player.getUuid())).getFaction().setOpen(open);
 		new Message("Successfully updated faction to  " + (open ? "open" : "closed")).send(player, false);
 		return 1;
 	}

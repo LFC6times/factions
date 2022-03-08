@@ -18,6 +18,7 @@ import net.minecraft.util.UserCache;
 import net.minecraft.util.Util;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class InfoCommand  {
@@ -59,7 +60,7 @@ public class InfoCommand  {
         String allyText = allies.size() + (allies.size() != 1 ? " allies" : " ally") + ", hover to see";
         String enemyText = enemies.size() + (enemies.size() != 1 ? " enemies" : " enemy") + ", hover to see";
 
-        UserCache cache = player.getServer().getUserCache();
+        UserCache cache = Objects.requireNonNull(player.getServer()).getUserCache();
 		String membersList = members.stream()
 			.map(member -> cache.getByUuid(member.uuid).orElse(new GameProfile(Util.NIL_UUID, "{Uncached Player}")).getName())
 			.collect(Collectors.joining(", "));

@@ -47,6 +47,7 @@ public class FactionsMod implements ModInitializer {
 		});
 
 		ServerTickEvents.END_WORLD_TICK.register((endTick) -> {
+
 			if(!Dynmap.factionsToUpdate.isEmpty()) {
 				Faction faction = Dynmap.factionsToUpdate.get(0);
 				Dynmap.factionsToUpdate.remove(0);

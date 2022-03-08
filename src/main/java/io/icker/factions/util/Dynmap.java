@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Dynmap {
-    public static ArrayList<Faction> factionsToUpdate;
+    public static ArrayList<Faction> factionsToUpdate = new ArrayList<>();
     public static void newChunkClaim(ChunkPos chunkPos, Faction faction) {
         MarkerSet markerSet = FactionsMod.markerSet;
         /*

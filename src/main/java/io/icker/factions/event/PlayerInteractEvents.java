@@ -20,6 +20,8 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.RaycastContext.FluidHandling;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 public class PlayerInteractEvents {
     public static boolean preventInteract(ServerPlayerEntity player, World world, BlockHitResult result) {
         BlockPos pos = result.getBlockPos();
@@ -49,7 +51,7 @@ public class PlayerInteractEvents {
         Member targetMember = Member.get(target.getUuid());
 
         if (playerMember == null || targetMember == null) return false;
-        return playerMember.getFaction().name == targetMember.getFaction().name;
+        return Objects.equals(playerMember.getFaction().name, targetMember.getFaction().name);
     }
 
     public static void warnPlayer(ServerPlayerEntity target, String action) {
@@ -77,8 +79,11 @@ public class PlayerInteractEvents {
         Member member = Member.get(player.getUuid());
         Faction owner = claim.getFaction();
 
+        if(member == null) {
+            return false;
+        }
         boolean overclaimed = owner.getClaims().size() * Config.CLAIM_WEIGHT > owner.power;
-        boolean validMember = member != null && member.getFaction().name == owner.name;
+        boolean validMember = Objects.equals(member.getFaction().name, owner.name);
         boolean allied = Ally.checkIfAlly(owner.name, member.getFaction().name);
         boolean enemied = Enemy.checkIfEnemy(owner.name, member.getFaction().name);
 

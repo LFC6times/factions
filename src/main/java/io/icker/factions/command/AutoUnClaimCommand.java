@@ -13,9 +13,10 @@ import net.minecraft.util.math.ChunkPos;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class AutoUnClaimCommand {
-    public static Map<ServerPlayerEntity, ChunkPos> playerToChunk = new HashMap<ServerPlayerEntity, ChunkPos>();
+    public static Map<ServerPlayerEntity, ChunkPos> playerToChunk = new HashMap<>();
 
     public static void addPlayer(ServerPlayerEntity player) {
         // playerToFaction.put(player, faction);
@@ -43,13 +44,20 @@ public class AutoUnClaimCommand {
         String dimension = player.getServerWorld().getRegistryKey().getValue().toString();
 
         Claim existingClaim = Claim.get(chunkPos.x, chunkPos.z, dimension);
+        if(member == null) {
+            return;
+        }
         if (existingClaim == null) {
             new Message("You cannot unclaim a chunk you do not own.").fail().send(player, false);
-        } else if(existingClaim.getFaction().name != member.getFaction().name) {
+        } else if(!Objects.equals(existingClaim.getFaction().name, member.getFaction().name)) {
             new Message("Another faction owns this chunk").fail().send(player, false);
         } else {
-            existingClaim.remove();
             Faction faction = member.getFaction();
+            if(faction == null) {
+                return;
+            }
+            existingClaim.remove();
+
             new Message("%s removed claim at chunk (%d, %d)", player.getName().asString(), existingClaim.x, existingClaim.z).send(faction);
             Dynmap.removeChunkClaim(chunkPos, faction);
         }

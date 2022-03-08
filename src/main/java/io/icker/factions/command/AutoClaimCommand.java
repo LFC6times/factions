@@ -13,9 +13,10 @@ import net.minecraft.util.math.ChunkPos;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class AutoClaimCommand {
-    public static Map<ServerPlayerEntity, ChunkPos> playerToChunk = new HashMap<ServerPlayerEntity, ChunkPos>();
+    public static Map<ServerPlayerEntity, ChunkPos> playerToChunk = new HashMap<>();
 
     public static void addPlayer(ServerPlayerEntity player) {
         // playerToFaction.put(player, faction);
@@ -43,13 +44,19 @@ public class AutoClaimCommand {
         String dimension = player.getServerWorld().getRegistryKey().getValue().toString();
 
         Claim existingClaim = Claim.get(chunkPos.x, chunkPos.z, dimension);
+        if(member == null) {
+            return;
+        }
         if (existingClaim == null) {
             Faction faction = member.getFaction();
+            if(faction == null) {
+                return;
+            }
             faction.addClaim(chunkPos.x, chunkPos.z, dimension);
             new Message("%s claimed chunk (%d, %d)", player.getName().asString(), chunkPos.x, chunkPos.z).send(faction);
             Dynmap.newChunkClaim(chunkPos, faction);
         } else {
-            String owner = existingClaim.getFaction().name == member.getFaction().name ? "Your" : "Another";
+            String owner = Objects.equals(existingClaim.getFaction().name, member.getFaction().name) ? "Your" : "Another";
             new Message(owner + " faction already owns this chunk").fail().send(player, false);
         }
     }

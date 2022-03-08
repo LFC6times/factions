@@ -8,6 +8,7 @@ import io.icker.factions.config.Config;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Invite;
 import io.icker.factions.event.FactionEvents;
+import io.icker.factions.util.Dynmap;
 import io.icker.factions.util.Message;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -44,6 +45,7 @@ public class JoinCommand implements Command<ServerCommandSource> {
 		
 		new Message(player.getName().asString() + " joined").send(faction);
 		FactionEvents.adjustPower(faction, Config.MEMBER_POWER); // TODO: change this, its ew
+		Dynmap.addFactionsToUpdate(faction);
 		return 1;
 	}
 }

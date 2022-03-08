@@ -7,6 +7,7 @@ import io.icker.factions.config.Config;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Member;
 import io.icker.factions.event.FactionEvents;
+import io.icker.factions.util.Dynmap;
 import io.icker.factions.util.Message;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,6 +19,9 @@ public class LeaveCommand implements Command<ServerCommandSource> {
 		ServerPlayerEntity player = source.getPlayer();
 		
 		Member member = Member.get(player.getUuid());
+		if(member == null) {
+			return 0;
+		}
 		Faction faction = member.getFaction();
         
 		new Message(player.getName().asString() + " left").send(faction);
@@ -29,7 +33,9 @@ public class LeaveCommand implements Command<ServerCommandSource> {
 		} else {
 			FactionEvents.adjustPower(faction, -Config.MEMBER_POWER);
 		}
-		
+
+		Dynmap.addFactionsToUpdate(faction);
+
 		return 1;
 	}
 }

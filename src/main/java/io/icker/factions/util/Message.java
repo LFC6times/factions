@@ -92,6 +92,9 @@ public class Message {
     public void sendToFactionChat(Faction faction) {
         for (Member member : faction.getMembers()) {
             ServerPlayerEntity player = manager.getPlayer(member.uuid);
+            if(player == null) {
+                continue;
+            }
             player.sendMessage(text, false);
         }
     }

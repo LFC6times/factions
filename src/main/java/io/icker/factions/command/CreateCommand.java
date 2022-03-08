@@ -12,6 +12,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
 
+import java.util.Objects;
+
 public class CreateCommand implements Command<ServerCommandSource> {
 	@Override
 	public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -25,7 +27,7 @@ public class CreateCommand implements Command<ServerCommandSource> {
 			return 0;
 		}
 
-		Faction.add(name, "No description set", Formatting.WHITE.getName(), false, Config.BASE_POWER + Config.MEMBER_POWER).addMember(player.getUuid(), Member.Rank.OWNER);
+		Objects.requireNonNull(Faction.add(name, "No description set", Formatting.WHITE.getName(), false, Config.BASE_POWER + Config.MEMBER_POWER)).addMember(player.getUuid(), Member.Rank.OWNER);
 		source.getServer().getPlayerManager().sendCommandTree(player);
 		
 		new Message("Successfully created faction").send(player, false);

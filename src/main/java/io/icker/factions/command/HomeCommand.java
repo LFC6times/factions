@@ -19,12 +19,14 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 
+import java.util.Objects;
+
 public class HomeCommand {
     public static int go(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
-        Faction faction = Member.get(player.getUuid()).getFaction();
+        Faction faction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
         Home home = faction.getHome();
 
         if (home == null) {
@@ -32,7 +34,7 @@ public class HomeCommand {
             return 0;
         }
 
-        ServerWorld world = player.getServer().getWorld(RegistryKey.of(Registry.WORLD_KEY, new Identifier(home.level)));
+        ServerWorld world = Objects.requireNonNull(player.getServer()).getWorld(RegistryKey.of(Registry.WORLD_KEY, new Identifier(home.level)));
 
         if (checkLimitToClaim(faction, world, new BlockPos(home.x, home.y, home.z))) {
             new Message("Cannot warp home to an unclaimed chunk").fail().send(player, false);
@@ -57,7 +59,7 @@ public class HomeCommand {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
-        Faction faction = Member.get(player.getUuid()).getFaction();
+        Faction faction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
 
         if (checkLimitToClaim(faction, player.getServerWorld(), player.getBlockPos())) {
             new Message("Cannot set home to an unclaimed chunk").fail().send(player, false);
@@ -81,6 +83,6 @@ public class HomeCommand {
         String dimension = world.getRegistryKey().getValue().toString();
 
         Claim possibleClaim = Claim.get(chunkPos.x, chunkPos.z, dimension);
-        return possibleClaim == null || possibleClaim.getFaction().name != faction.name;
+        return possibleClaim == null || !Objects.equals(possibleClaim.getFaction().name, faction.name);
     }
 }
