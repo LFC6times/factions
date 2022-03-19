@@ -26,7 +26,10 @@ public class MapCommand {
         String dimension = world.getRegistryKey().getValue().toString();
 
         Member member = Member.get(player.getUuid());
-        Faction faction = member == null ? null : member.getFaction();
+        if(member == null) {
+            return 1;
+        }
+        Faction faction = member.getFaction();
 
         // Print the header of the faction map.
         new Message("---------------[").format(Formatting.GRAY)

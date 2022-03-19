@@ -15,7 +15,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.ChunkPos;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ClaimCommand {
@@ -52,9 +51,7 @@ public class ClaimCommand {
 
 		Member member = Member.get(player.getUuid());
 		Claim existingClaim = Claim.get(chunkPos.x, chunkPos.z, dimension);
-		if(member == null) {
-			return 0;
-		}
+		
 		if (existingClaim == null) {
 			Faction faction = member.getFaction();
 			faction.addClaim(chunkPos.x, chunkPos.z, dimension);
@@ -63,7 +60,7 @@ public class ClaimCommand {
 			return 1;
 		}
 		
-		String owner = Objects.equals(existingClaim.getFaction().name, member.getFaction().name) ? "Your" : "Another";
+		String owner = existingClaim.getFaction().name == member.getFaction().name ? "Your" : "Another";
 		new Message(owner + " faction already owns this chunk").fail().send(player, false);
 		return 0;
 	}
@@ -84,10 +81,10 @@ public class ClaimCommand {
 			return 0;
 		}
 
-		Faction faction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
+		Faction faction = Member.get(player.getUuid()).getFaction();
 		PlayerConfig config = PlayerConfig.get(player.getUuid());
 
-		if (!Objects.equals(existingClaim.getFaction().name, faction.name) && !config.bypass) {
+		if (existingClaim.getFaction().name != faction.name && !config.bypass) {
 			new Message("Cannot remove a claim owned by another faction").fail().send(player, false);
 			return 0;
 		}
@@ -102,7 +99,7 @@ public class ClaimCommand {
 		ServerCommandSource source = context.getSource();
 		ServerPlayerEntity player = source.getPlayer();
 
-		Faction faction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
+		Faction faction = Member.get(player.getUuid()).getFaction();
 
 		ArrayList<Claim> claimList = faction.getClaims();
 

@@ -11,8 +11,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
 
-import java.util.Objects;
-
 public class TransferOwnerCommand implements Command<ServerCommandSource> {
     @Override
     public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -27,13 +25,13 @@ public class TransferOwnerCommand implements Command<ServerCommandSource> {
             return 0;
         }
 
-        Faction faction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
+        Faction faction = Member.get(player.getUuid()).getFaction();
 
         for (Member member : faction.getMembers())
             if (member.uuid.equals(target.getUuid())) {
 
                 member.updateRank(Member.Rank.OWNER);
-                Objects.requireNonNull(Member.get(player.getUuid())).updateRank(Member.Rank.CO_OWNER);
+                Member.get(player.getUuid()).updateRank(Member.Rank.CO_OWNER);
 
                 context.getSource().getServer().getPlayerManager().sendCommandTree(player);
                 context.getSource().getServer().getPlayerManager().sendCommandTree(target);

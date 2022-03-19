@@ -20,13 +20,16 @@ public class LeaveCommand implements Command<ServerCommandSource> {
 		
 		Member member = Member.get(player.getUuid());
 		if(member == null) {
-			return 0;
+			return 1;
 		}
 		Faction faction = member.getFaction();
         
 		new Message(player.getName().asString() + " left").send(faction);
 		member.remove();
         context.getSource().getServer().getPlayerManager().sendCommandTree(player);
+
+		AutoClaimCommand.stopAutoClaim(context);
+		AutoUnClaimCommand.stopAutoUnClaim(context);
 
 		if (faction.getMembers().size() == 0) {
 			faction.remove();
@@ -35,7 +38,7 @@ public class LeaveCommand implements Command<ServerCommandSource> {
 		}
 
 		Dynmap.addFactionsToUpdate(faction);
-
+		
 		return 1;
 	}
 }

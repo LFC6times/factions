@@ -13,8 +13,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.Objects;
-
 public class CommandRegistry {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		LiteralCommandNode<ServerCommandSource> factions = CommandManager
@@ -39,8 +37,8 @@ public class CommandRegistry {
 			.literal("disband")
 			.requires(CommandRegistry::isOwner)
 			.executes(new DisbandCommand())
-				//.executes(AutoClaimCommand::stopAutoClaim)
-				//.executes(AutoUnClaimCommand::stopAutoUnClaim)
+				// .executes(AutoClaimCommand::stopAutoClaim)
+				// .executes(AutoUnClaimCommand::stopAutoUnClaim)
 			.build();
 
 		LiteralCommandNode<ServerCommandSource> join = CommandManager
@@ -56,8 +54,8 @@ public class CommandRegistry {
 			.literal("leave")
 			.requires(s -> CommandRegistry.isFactionMember(s) && !CommandRegistry.isOwner(s))
 			.executes(new LeaveCommand())
-				//.executes(AutoClaimCommand::stopAutoClaim)
-				//.executes(AutoUnClaimCommand::stopAutoUnClaim)
+				// .executes(AutoClaimCommand::stopAutoClaim)
+				// .executes(AutoUnClaimCommand::stopAutoUnClaim)
 			.build();
 
 		LiteralCommandNode<ServerCommandSource> info = CommandManager
@@ -221,6 +219,12 @@ public class CommandRegistry {
 			.executes(new BypassCommand())
 			.build();
 
+		LiteralCommandNode<ServerCommandSource> reloadDynmap = CommandManager
+				.literal("reloadall")
+				.requires(s -> s.hasPermissionLevel(4))
+				.executes(ReloadDynmapCommand::reloadDynmap)
+				.build();
+
 		LiteralCommandNode<ServerCommandSource> rank = CommandManager
 			.literal("rank")
 			.requires(CommandRegistry::isRankAboveOfficer)
@@ -320,6 +324,7 @@ public class CommandRegistry {
 		factions.addChild(info);
 		factions.addChild(list);
 		factions.addChild(adminBypass);
+		factions.addChild(reloadDynmap);
 		factions.addChild(chat);
 
 		factions.addChild(removeClaim2);
@@ -383,28 +388,28 @@ public class CommandRegistry {
 	public static boolean isCivilian(ServerCommandSource source) {
 		try {
 			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Objects.requireNonNull(Member.get(player.getUuid())).getRank() == Member.Rank.CIVILIAN;
+			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.CIVILIAN;
 		} catch (CommandSyntaxException e) { return false; }
 	}
 
 	public static boolean isOfficer(ServerCommandSource source) {
 		try {
 			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Objects.requireNonNull(Member.get(player.getUuid())).getRank() == Member.Rank.OFFICER;
+			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.OFFICER;
 		} catch (CommandSyntaxException e) { return false; }
 	}
 
 	public static boolean isCoOwner(ServerCommandSource source) {
 		try {
 			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Objects.requireNonNull(Member.get(player.getUuid())).getRank() == Member.Rank.CO_OWNER;
+			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.CO_OWNER;
 		} catch (CommandSyntaxException e) { return false; }
 	}
 
 	public static boolean isOwner(ServerCommandSource source) {
 		try {
 			ServerPlayerEntity player = source.getPlayer();
-			return isFactionMember(source) && Objects.requireNonNull(Member.get(player.getUuid())).getRank() == Member.Rank.OWNER;
+			return isFactionMember(source) && Member.get(player.getUuid()).getRank() == Member.Rank.OWNER;
 		} catch (CommandSyntaxException e) { return false; }
 	}
 

@@ -26,11 +26,10 @@ public abstract class ServerPlayerEntityMixin extends LivingEntity {
         Entity entity = source.getSource();
         if (entity == null || !entity.isPlayer()) return;
         Entity attacker = source.getAttacker();
-        if(attacker == null) {
-            return;
-        }
-        if (attacker.isPlayer()) {
-            if(!attacker.getName().asString().equals(entity.getName().asString())) {
+        if(attacker == null) {}
+        else if (attacker.isPlayer()) {
+            if(attacker.getName().asString().equals(entity.getName().asString())) {}
+            else {
                 FactionEvents.killedAPlayer((ServerPlayerEntity) attacker, (ServerPlayerEntity) entity);
             }
         }

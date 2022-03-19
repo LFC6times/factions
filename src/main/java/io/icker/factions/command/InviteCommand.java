@@ -15,14 +15,13 @@ import net.minecraft.util.UserCache;
 import net.minecraft.util.Util;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class InviteCommand {
 	public static int list(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		ServerCommandSource source = context.getSource();
 
-		ArrayList<Invite> invites = Objects.requireNonNull(Member.get(source.getPlayer().getUuid())).getFaction().getInvites();
+		ArrayList<Invite> invites = Member.get(source.getPlayer().getUuid()).getFaction().getInvites();
 		int count = invites.size();
 
 		new Message("You have ")

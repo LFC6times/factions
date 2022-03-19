@@ -2,6 +2,7 @@ package io.icker.factions.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.icker.factions.FactionsMod;
 import io.icker.factions.database.Claim;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Member;
@@ -13,10 +14,9 @@ import net.minecraft.util.math.ChunkPos;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class AutoClaimCommand {
-    public static Map<ServerPlayerEntity, ChunkPos> playerToChunk = new HashMap<>();
+    public static Map<ServerPlayerEntity, ChunkPos> playerToChunk = new HashMap<ServerPlayerEntity, ChunkPos>();
 
     public static void addPlayer(ServerPlayerEntity player) {
         // playerToFaction.put(player, faction);
@@ -43,20 +43,23 @@ public class AutoClaimCommand {
         ChunkPos chunkPos = player.getServerWorld().getChunk(player.getBlockPos()).getPos();
         String dimension = player.getServerWorld().getRegistryKey().getValue().toString();
 
-        Claim existingClaim = Claim.get(chunkPos.x, chunkPos.z, dimension);
         if(member == null) {
+            removePlayer(player);
             return;
         }
+
+        Claim existingClaim = Claim.get(chunkPos.x, chunkPos.z, dimension);
         if (existingClaim == null) {
             Faction faction = member.getFaction();
             if(faction == null) {
+                removePlayer(player);
                 return;
             }
             faction.addClaim(chunkPos.x, chunkPos.z, dimension);
             new Message("%s claimed chunk (%d, %d)", player.getName().asString(), chunkPos.x, chunkPos.z).send(faction);
             Dynmap.newChunkClaim(chunkPos, faction);
         } else {
-            String owner = Objects.equals(existingClaim.getFaction().name, member.getFaction().name) ? "Your" : "Another";
+            String owner = existingClaim.getFaction().name == member.getFaction().name ? "Your" : "Another";
             new Message(owner + " faction already owns this chunk").fail().send(player, false);
         }
     }

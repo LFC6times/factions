@@ -10,8 +10,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
 
-import java.util.Objects;
-
 public class RankCommand {
     public static int promote(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity target = EntityArgumentType.getPlayer(context, "player");
@@ -25,7 +23,7 @@ public class RankCommand {
             return 0;
         }
 
-        Faction faction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
+        Faction faction = Member.get(player.getUuid()).getFaction();
 
         for (Member member : faction.getMembers())
             if (member.uuid.equals(target.getUuid())) {
@@ -45,7 +43,7 @@ public class RankCommand {
 
                 context.getSource().getServer().getPlayerManager().sendCommandTree(target);
 
-                new Message("Promoted " + target.getName().getString() + " to " + Objects.requireNonNull(Member.get(target.getUuid())).getRank().name().toLowerCase().replace("_", " ")).send(player, false);
+                new Message("Promoted " + target.getName().getString() + " to " + Member.get(target.getUuid()).getRank().name().toLowerCase().replace("_", " ")).send(player, false);
                 return 1;
             }
 
@@ -65,7 +63,7 @@ public class RankCommand {
             return 0;
         }
 
-        Faction faction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
+        Faction faction = Member.get(player.getUuid()).getFaction();
 
         for (Member member : faction.getMembers())
             if (member.uuid.equals(target.getUuid())) {
@@ -77,7 +75,7 @@ public class RankCommand {
                     }
                     case OFFICER -> member.updateRank(Member.Rank.CIVILIAN);
                     case CO_OWNER -> {
-                        if (Objects.requireNonNull(Member.get(player.getUuid())).getRank() == Member.Rank.CO_OWNER) {
+                        if (Member.get(player.getUuid()).getRank() == Member.Rank.CO_OWNER) {
                             new Message("You cannot demote a fellow co-owner").format(Formatting.RED).send(player, false);
                             return 0;
                         }
@@ -92,7 +90,7 @@ public class RankCommand {
 
                 context.getSource().getServer().getPlayerManager().sendCommandTree(target);
 
-                new Message("Demoted " + target.getName().getString() + " to " + Objects.requireNonNull(Member.get(target.getUuid())).getRank().name().toLowerCase().replace("_", " ")).send(player, false);
+                new Message("Demoted " + target.getName().getString() + " to " + Member.get(target.getUuid()).getRank().name().toLowerCase().replace("_", " ")).send(player, false);
                 return 1;
             }
 

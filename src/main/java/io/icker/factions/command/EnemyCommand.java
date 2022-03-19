@@ -13,8 +13,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
 
-import java.util.Objects;
-
 public class EnemyCommand {
 
     public static int add(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -23,13 +21,13 @@ public class EnemyCommand {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
-        Faction sourceFaction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
-        Faction targetFaction = Objects.requireNonNull(Member.get(target.getUuid())).getFaction();
+        Faction sourceFaction = Member.get(player.getUuid()).getFaction();
+        Faction targetFaction = Member.get(target.getUuid()).getFaction();
 
 
         if (Enemy.checkIfEnemy(sourceFaction.name, targetFaction.name)) {
             new Message(targetFaction.name + " is already an enemy.").format(Formatting.RED).send(player, false);
-        } else if (Objects.equals(sourceFaction.name, targetFaction.name)) {
+        } else if (sourceFaction.name == targetFaction.name) {
             new Message("You can't make yourself an enemy.").format(Formatting.RED).send(player, false);
         } else if (Ally.checkIfAlly(sourceFaction.name, targetFaction.name)) {
             new Message(targetFaction.name + " is your ally. Do /factions ally remove <faction> then do /factions enemy add <faction> again.").format(Formatting.RED).send(player, false);
@@ -42,7 +40,7 @@ public class EnemyCommand {
                     sourceFaction.name + " has made you their enemy. Click to make them your enemy.").format(Formatting.YELLOW)
                     .click("/factions enemy add " + source.getName())
                     .send(target, false);
-            Dynmap.addFactionsToUpdate(Objects.requireNonNull(Member.get(player.getUuid())).getFaction());
+            Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
         }
 
         return 1;
@@ -54,8 +52,8 @@ public class EnemyCommand {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
-        Faction sourceFaction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
-        Faction targetFaction = Objects.requireNonNull(Member.get(target.getUuid())).getFaction();
+        Faction sourceFaction = Member.get(player.getUuid()).getFaction();
+        Faction targetFaction = Member.get(target.getUuid()).getFaction();
 
         if (!Enemy.checkIfEnemy(sourceFaction.name, targetFaction.name)) {
             new Message(targetFaction.name + " is not your enemy.").format(Formatting.RED).send(player, false);
@@ -68,7 +66,7 @@ public class EnemyCommand {
                     "You are no longer enemies with " + sourceFaction.name + ". Click to remove them as an enemy.").format(Formatting.YELLOW)
                     .click("/factions enemy remove " + sourceFaction.name)
                     .send(target, false);
-            Dynmap.addFactionsToUpdate(Objects.requireNonNull(Member.get(player.getUuid())).getFaction());
+            Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
         }
 
         return 1;

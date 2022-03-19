@@ -34,7 +34,7 @@ public class Faction {
         Query query = new Query("SELECT * FROM Faction;")
             .executeQuery();
 
-        ArrayList<Faction> factions = new ArrayList<>();
+        ArrayList<Faction> factions = new ArrayList<Faction>();
         if (!query.success) return factions;
 
         while (query.next()) {
@@ -80,7 +80,7 @@ public class Faction {
             .set(name)
             .executeQuery();
 
-        ArrayList<Member> members = new ArrayList<>();
+        ArrayList<Member> members = new ArrayList<Member>();
         if (!query.success) return members;
 
         while (query.next()) {
@@ -102,7 +102,7 @@ public class Faction {
             .set(name)
             .executeQuery();
 
-        ArrayList<Claim> claims = new ArrayList<>();
+        ArrayList<Claim> claims = new ArrayList<Claim>();
         if (!query.success) return claims;
 
         while (query.next()) {

@@ -12,8 +12,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
 
-import java.util.Objects;
-
 public class AllyCommand {
     public static int add(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity target = EntityArgumentType.getPlayer(context, "player");
@@ -21,12 +19,12 @@ public class AllyCommand {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
-        Faction sourceFaction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
-        Faction targetFaction = Objects.requireNonNull(Member.get(target.getUuid())).getFaction();
+        Faction sourceFaction = Member.get(player.getUuid()).getFaction();
+        Faction targetFaction = Member.get(target.getUuid()).getFaction();
 
         if (Ally.checkIfAlly(sourceFaction.name, targetFaction.name)) {
             new Message(targetFaction.name + " is already allied.").format(Formatting.RED).send(player, false);
-        } else if (Objects.equals(sourceFaction.name, targetFaction.name)) {
+        } else if (sourceFaction.name == targetFaction.name) {
             new Message("You can't ally yourself.").format(Formatting.RED).send(player, false);
         } else {
             Ally.add(sourceFaction.name, targetFaction.name);
@@ -37,7 +35,7 @@ public class AllyCommand {
                     "You are now allies with " + sourceFaction.name + ". Click to ally them back.").format(Formatting.YELLOW)
                     .click("/factions ally add " + source.getName())
                     .send(target, false);
-            Dynmap.addFactionsToUpdate(Objects.requireNonNull(Member.get(player.getUuid())).getFaction());
+            Dynmap.addFactionsToUpdate(Member.get(player.getUuid()).getFaction());
         }
 
         return 1;
@@ -49,8 +47,8 @@ public class AllyCommand {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
-        Faction sourceFaction = Objects.requireNonNull(Member.get(player.getUuid())).getFaction();
-        Faction targetFaction = Objects.requireNonNull(Member.get(target.getUuid())).getFaction();
+        Faction sourceFaction = Member.get(player.getUuid()).getFaction();
+        Faction targetFaction = Member.get(target.getUuid()).getFaction();
 
         if (!Ally.checkIfAlly(sourceFaction.name, targetFaction.name)) {
             new Message(targetFaction.name + " is not allied.").format(Formatting.RED).send(player, false);
