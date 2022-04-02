@@ -1,5 +1,6 @@
 package io.icker.factions.event;
 
+import io.icker.factions.FactionsMod;
 import io.icker.factions.config.Config;
 import io.icker.factions.database.Faction;
 import io.icker.factions.database.Member;
@@ -22,7 +23,7 @@ public class FactionEvents {
         if(member == null) {
             return;
         }
-
+        FactionsMod.LOGGER.info("ayo it called the kill function");
         Faction faction = member.getFaction();
 
         int adjusted = adjustPower(faction, Config.POWER_DEATH_PENALTY + 1);
@@ -40,7 +41,7 @@ public class FactionEvents {
     }
 
     public static int adjustPower(Faction faction, int adjustment) {
-        int maxPower = Config.BASE_POWER + (faction.getMembers().size() * Config.MEMBER_POWER);
+        int maxPower = 999999999;//Config.BASE_POWER + (faction.getMembers().size() * Config.MEMBER_POWER);
 
         int updated = Math.min(Math.max(0, faction.power + adjustment), maxPower);
         faction.setPower(updated);

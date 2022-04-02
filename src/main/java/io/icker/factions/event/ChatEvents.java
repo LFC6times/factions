@@ -7,6 +7,7 @@ import io.icker.factions.database.PlayerConfig.ChatOption;
 import io.icker.factions.util.Message;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
+import io.icker.factions.FactionsMod;
 
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class ChatEvents {
     }
 
     public static void global(ServerPlayerEntity sender, String message) {
+        FactionsMod.LOGGER.info("[" + sender.getName().asString() + " -> All] " + message);
         new Message(sender.getName().asString())
             .filler("»")
             .add(new Message(message).format(Formatting.GRAY))
@@ -42,6 +44,8 @@ public class ChatEvents {
         for (Member member : faction.getMembers())
             if (member.uuid.equals(sender.getUuid()))
                 rank = member.getRank().name().toLowerCase().replace("_", " ");
+
+        FactionsMod.LOGGER.info("[" + faction.name + " " + rank + " " + sender.getName().asString() + " -> All] " + message);
 
         new Message("")
             .add(new Message(faction.name).format(Formatting.BOLD, faction.color))
